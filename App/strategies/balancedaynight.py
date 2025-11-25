@@ -1,17 +1,37 @@
-from .strategy import *
+from .scheduling_strategy import SchedulingStrategy
 
 
 
-class BalanceDayNight(ScheduleStrategy):
+# again this function was moved to here as it is the only strategy that uses it.
+
+def get_shift_type(shift):
+    if shift is None:
+        return "day"
+    
+    startTime = getattr(shift, "start_time", None)
+    
+    if startTime is not None:
+        if hasattr(startTime, "hour"):
+            hour = startTime.hour
+            if hour >= 18 or hour < 6:
+                return "night"
+            else:
+                return "day"
+    
+    return "day"  
 
 
-    def distribute_shifts(self, staff, shifts, week_start=None):
+class BalanceDayNightStrategy(SchedulingStrategy):
+
+
+    def distribute(self, staff_list, shifts, week_start=None):
         assignments = {}
 
-        if not staff:
-            return Schedule(assignments)
+        if not staff_list:
+            return assignments
         
-        staff_ids = [get_staff_id(member) for member in staff]
+        staff_ids = [str(staffMember.id) for staffMember in staff_list]
+
         for staff_id in staff_ids:
             assignments[staff_id] = []
 
@@ -28,7 +48,7 @@ class BalanceDayNight(ScheduleStrategy):
             counts[chosen_staff][shift_type] = counts[chosen_staff].get(shift_type, 0) + 1
 
 
-        return Schedule(assignments)
+        return assignments
 
 """
 This strategy uses a greedy algorithm to balance the number of day and night shifts assigned to each staff member.

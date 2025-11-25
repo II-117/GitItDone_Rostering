@@ -1,15 +1,30 @@
-from .strategy import *
-
-class MinimizeDays(ScheduleStrategy):
+from .scheduling_strategy import SchedulingStrategy
 
 
-    def distribute_shifts(self, staff, shifts, week_start=None):
+#this method was relocated here as it is only used by this strategy
+
+def get_shift_day(shift):
+    if shift is None:
+        return None
+    
+    startTime = getattr(shift, "start_time", None)
+
+    if startTime is not None:
+        if hasattr(startTime, "date"):
+            return startTime.date()
+    return None
+
+
+class MinimizeDaysStrategy(SchedulingStrategy):
+
+
+    def distribute(self, staff_list, shifts, week_start=None):
         assignments = {}
 
-        if not staff:
-            return Schedule(assignments)
+        if not staff_list:
+            return assignments
         
-        staff_ids = [get_staff_id(member) for member in staff]
+        staff_ids = [str(staffMember.id) for staffMember in staff_list]
 
         for staff_id in staff_ids:
             assignments[staff_id] = []
@@ -34,7 +49,7 @@ class MinimizeDays(ScheduleStrategy):
                 days[chosen].add(shift_day)
                 
 
-        return Schedule(assignments)
+        return assignments
     
 
 """

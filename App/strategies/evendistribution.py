@@ -1,17 +1,18 @@
-from .strategy import *
+from .scheduling_strategy import SchedulingStrategy
 
 
 
-class EvenDistribution(ScheduleStrategy):
+class EvenDistributionStrategy(SchedulingStrategy):
 
-    def distribute_shifts(self, staff, shifts, week_start=None):
+    def distribute(self, staff_list, shifts, week_start=None):
         assignments = {}
 
-        if not staff:
-            return Schedule(assignments)
+        if not staff_list:
+            return assignments
         
 
-        staff_ids = [get_staff_id(member) for member in staff]
+        staff_ids = [str(staffMember.id) for staffMember in staff_list]
+
         for staff_id in staff_ids:
             assignments[staff_id] = []
         
@@ -23,6 +24,6 @@ class EvenDistribution(ScheduleStrategy):
             assignments[staff_id].append(shift)
             i += 1
         
-        return Schedule(assignments)
+        return assignments
     
 # This use an even distribution, a round robin approach, to assign shifts to staff members in order. - VR

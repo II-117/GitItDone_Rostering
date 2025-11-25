@@ -1,6 +1,7 @@
-from .strategy import Schedule, ScheduleStrategy, get_staff_id, get_shift_id, get_shift_day, get_shift_type
-from .evendistribution import EvenDistribution
-from .balancedaynight import BalanceDayNight
-from .minimizedays import MinimizeDays
+from .scheduling_strategy import SchedulingStrategy
+from .schedule_generator import ScheduleGenerator
+from .evendistribution import EvenDistributionStrategy
+from .balancedaynight import BalanceDayNightStrategy
+from .minimizedays import MinimizeDaysStrategy
 
-__all__ = ["Schedule", "ScheduleStrategy", "get_staff_id", "get_shift_id", "get_shift_day", "get_shift_type", "EvenDistribution", "BalanceDayNight", "MinimizeDays"]
+__all__ = ["SchedulingStrategy", "ScheduleGenerator","EvenDistributionStrategy", "MinimizeDaysStrategy", "BalanceDayNightStrategy"]
