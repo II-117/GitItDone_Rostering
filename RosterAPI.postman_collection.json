@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "982ba4f2-1a0e-43bc-803b-5217c9831e62",
+		"_postman_id": "cc9c7bff-d18e-4286-8078-407d20e81496",
 		"name": "RosterAPI",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "20616724",
-		"_collection_link": "https://manutd-3640.postman.co/workspace/ManUtd-Workspace~2fb3167d-d7e4-4b28-a65f-08d0dd95df9b/collection/20616724-982ba4f2-1a0e-43bc-803b-5217c9831e62?action=share&source=collection_link&creator=20616724"
+		"_exporter_id": "49511481",
+		"_collection_link": "https://tylerbaksh163-4871962.postman.co/workspace/Tyler-Baksh's-Workspace~1c148b6f-bd3c-4d7e-8995-6b8cf5e4eb21/collection/49511481-cc9c7bff-d18e-4286-8078-407d20e81496?action=share&source=collection_link&creator=49511481"
 	},
 	"item": [
 		{
@@ -19,7 +19,15 @@
 								"exec": [
 									"// js code to save the access_token for user authentication\r",
 									"let jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"access_token\",jsonData.access_token) // creates access_token variable in postman and sets it to the value of the access_token in the response body."
+									"pm.environment.set(\"access_token\",jsonData.access_token) // creates access_token variable in postman and sets it to the value of the access_token in the response body.\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access token has been set\", function(){\r",
+									"    pm.expect(pm.environment.get(\"access_token\")).to.eql(jsonData.access_token);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {},
@@ -54,6 +62,34 @@
 				},
 				{
 					"name": "Admin: Create_Schedule",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains schedule object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"shifts\");\r",
+									"    pm.expect(json).to.have.property(\"weekStart\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -69,7 +105,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"scheduleName\": \"Morning Shift\"\r\n}",
+							"raw": "{\r\n \"week_start\": \"2025-11-25\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -90,6 +126,39 @@
 				},
 				{
 					"name": "Admin: Create_Shift",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains shift object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"clock_in\");\r",
+									"    pm.expect(json).to.have.property(\"clock_out\");\r",
+									"    pm.expect(json).to.have.property(\"end_time\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"schedule_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_name\");\r",
+									"    pm.expect(json).to.have.property(\"start_time\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -125,7 +194,320 @@
 					"response": []
 				},
 				{
+					"name": "Admin: Create Unassigned Shift",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains shift object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"clock_in\");\r",
+									"    pm.expect(json).to.have.property(\"clock_out\");\r",
+									"    pm.expect(json).to.have.property(\"end_time\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"schedule_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_name\");\r",
+									"    pm.expect(json).to.have.property(\"start_time\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"start_time\": \"2025-11-26T09:00:00\",\r\n    \"end_time\": \"2025-11-26T17:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/createUnassignedShift",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"createUnassignedShift"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Auto-Generate Schedule (Even)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Response body is valid JSON\", function () {\r",
+									"        pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"    });\r",
+									"    \r",
+									"    pm.test(\"Response contains schedule object\", function () {\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json).to.be.an(\"object\");\r",
+									"        pm.expect(json).to.have.property(\"id\");\r",
+									"        pm.expect(json).to.have.property(\"shifts\");\r",
+									"        pm.expect(json).to.have.property(\"weekStart\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"if (pm.response.code === 400) {\r",
+									"   pm.test(\"Correct error message\", function(){\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json.error).to.eql(\"Invalid input: No unassigned shifts available for scheduling\");\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"week_start\": \"2025-11-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/autoGenerateSchedule/even",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"autoGenerateSchedule",
+								"even"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Auto-Generate Schedule (Balance Day Night)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Response body is valid JSON\", function () {\r",
+									"        pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"    });\r",
+									"    \r",
+									"    pm.test(\"Response contains schedule object\", function () {\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json).to.be.an(\"object\");\r",
+									"        pm.expect(json).to.have.property(\"id\");\r",
+									"        pm.expect(json).to.have.property(\"shifts\");\r",
+									"        pm.expect(json).to.have.property(\"weekStart\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"if (pm.response.code === 400) {\r",
+									"   pm.test(\"Correct error message\", function(){\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json.error).to.eql(\"Invalid input: No unassigned shifts available for scheduling\");\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"week_start\": \"2025-11-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/autoGenerateSchedule/balanceDayNight",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"autoGenerateSchedule",
+								"balanceDayNight"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin: Auto-Generate Schedule (Minimize Days)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Response body is valid JSON\", function () {\r",
+									"        pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"    });\r",
+									"    \r",
+									"    pm.test(\"Response contains schedule object\", function () {\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json).to.be.an(\"object\");\r",
+									"        pm.expect(json).to.have.property(\"id\");\r",
+									"        pm.expect(json).to.have.property(\"shifts\");\r",
+									"        pm.expect(json).to.have.property(\"weekStart\");\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"if (pm.response.code === 400) {\r",
+									"   pm.test(\"Correct error message\", function(){\r",
+									"        const json = pm.response.json();\r",
+									"        pm.expect(json.error).to.eql(\"Invalid input: No unassigned shifts available for scheduling\");\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"week_start\": \"2025-11-25\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/autoGenerateSchedule/minimizeDays",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"autoGenerateSchedule",
+								"minimizeDays"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Admin: Shift_Report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body is valid JSON\", function () {",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();",
+									"});",
+									"",
+									"pm.test(\"Report contains valid shift details\", function () {",
+									"    const json = pm.response.json();",
+									"",
+									"    if (Array.isArray(json) && json.length > 0) {",
+									"        const first = json[0];",
+									"",
+									"        pm.expect(first).to.be.an(\"object\");",
+									"        pm.expect(first).to.have.property(\"clock_in\");",
+									"        pm.expect(first).to.have.property(\"clock_out\");",
+									"        pm.expect(first).to.have.property(\"end_time\");",
+									"        pm.expect(first).to.have.property(\"id\");",
+									"        pm.expect(first).to.have.property(\"schedule_id\");",
+									"        pm.expect(first).to.have.property(\"staff_id\");",
+									"        pm.expect(first).to.have.property(\"staff_name\");",
+									"        pm.expect(first).to.have.property(\"start_time\");",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -160,6 +542,27 @@
 				},
 				{
 					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response message contains 'Logged Out!'\", function(){\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.message).to.eql(\"Logged Out!\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -200,7 +603,15 @@
 								"exec": [
 									"// js code to save the access_token for user authentication\r",
 									"let jsonData = JSON.parse(responseBody);\r",
-									"pm.environment.set(\"access_token\",jsonData.access_token) // creates access_token variable in postman and sets it to the value of the access_token in the response body."
+									"pm.environment.set(\"access_token\",jsonData.access_token) // creates access_token variable in postman and sets it to the value of the access_token in the response body.\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Access token has been set\", function(){\r",
+									"    pm.expect(pm.environment.get(\"access_token\")).to.eql(jsonData.access_token);\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {},
@@ -249,6 +660,43 @@
 				},
 				{
 					"name": "Staff: Show_Roster",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Report contains valid roster details\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    if (Array.isArray(json) && json.length > 0) {\r",
+									"        const first = json[0];\r",
+									"\r",
+									"        pm.expect(first).to.be.an(\"object\");\r",
+									"        pm.expect(first).to.have.property(\"clock_in\");\r",
+									"        pm.expect(first).to.have.property(\"clock_out\");\r",
+									"        pm.expect(first).to.have.property(\"end_time\");\r",
+									"        pm.expect(first).to.have.property(\"id\");\r",
+									"        pm.expect(first).to.have.property(\"schedule_id\");\r",
+									"        pm.expect(first).to.have.property(\"staff_id\");\r",
+									"        pm.expect(first).to.have.property(\"staff_name\");\r",
+									"        pm.expect(first).to.have.property(\"start_time\");\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -277,6 +725,39 @@
 				},
 				{
 					"name": "getShift",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains shift object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"clock_in\");\r",
+									"    pm.expect(json).to.have.property(\"clock_out\");\r",
+									"    pm.expect(json).to.have.property(\"end_time\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"schedule_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_name\");\r",
+									"    pm.expect(json).to.have.property(\"start_time\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -317,6 +798,44 @@
 				},
 				{
 					"name": "Staff: Clock_In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains shift object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"clock_in\");\r",
+									"    pm.expect(json).to.have.property(\"clock_out\");\r",
+									"    pm.expect(json).to.have.property(\"end_time\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"schedule_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_name\");\r",
+									"    pm.expect(json).to.have.property(\"start_time\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Clock in is not null\", function () {\r",
+									"     const json = pm.response.json();\r",
+									"    pm.expect(json.clock_in).to.not.be.null;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -354,6 +873,44 @@
 				},
 				{
 					"name": "Staff: Clock_Out",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is valid JSON\", function () {\r",
+									"    pm.expect(() => JSON.parse(pm.response.text())).not.to.throw();\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains shift object\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    pm.expect(json).to.be.an(\"object\");\r",
+									"    pm.expect(json).to.have.property(\"clock_in\");\r",
+									"    pm.expect(json).to.have.property(\"clock_out\");\r",
+									"    pm.expect(json).to.have.property(\"end_time\");\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"schedule_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_id\");\r",
+									"    pm.expect(json).to.have.property(\"staff_name\");\r",
+									"    pm.expect(json).to.have.property(\"start_time\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Clock out is not null\", function () {\r",
+									"     const json = pm.response.json();\r",
+									"    pm.expect(json.clock_out).to.not.be.null;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -391,6 +948,27 @@
 				},
 				{
 					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response message contains 'Logged Out!'\", function(){\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json.message).to.eql(\"Logged Out!\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",

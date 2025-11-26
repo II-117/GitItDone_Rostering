@@ -9,15 +9,13 @@ from App.database import db
 from datetime import datetime
 from App.controllers.user import get_user
 
-def create_schedule(admin_id, scheduleName): #Not sure why this was missing
+def create_schedule(admin_id, week_start): #Not sure why this was missing
     admin = get_user(admin_id)
     if not admin or admin.role != "admin":
         raise PermissionError("Only admins can create schedules")
 
     new_schedule = Schedule(
-        created_by=admin_id,
-        name=scheduleName,
-        created_at=datetime.utcnow()
+        weekStart=week_start
     )
 
     db.session.add(new_schedule)
