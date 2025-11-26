@@ -198,6 +198,65 @@ def view_schedule_command(schedule_id):
         print(f"✅ Viewing schedule {schedule_id}:")
         print(schedule.get_json())
 
+@schedule_cli.command("auto-schedule", help="Auto-schedule shifts using a strategy")
+@click.argument("schedule_id", type=int)
+@click.argument("strategy", type=str)
+@click.argument("staff_ids", type=str)
+def auto_schedule_command(schedule_id, strategy, staff_ids):
+    """Auto-schedule shifts for a schedule using a strategy (even, minimize, daynight)"""
+    from App.models import Schedule, Staff
+    from App.strategies.evendistribution import EvenDistributionStrategy
+    from App.strategies.minimizedays import MinimizeDaysStrategy
+    from App.strategies.balancedaynight import BalanceDayNightStrategy
+    from App.strategies.schedule_generator import ScheduleGenerator
+    
+    require_admin_login()
+    
+    raw_id_list = [x.strip() for x in staff_ids.split(',') if x.strip()]
+    
+    if not all(x.isdigit() for x in raw_id_list):
+        print("❌ Invalid staff IDs. Use format: 1,2,3 (numbers only)")
+        return
+
+    staff_id_list = [int(x) for x in raw_id_list]
+    
+    schedule = db.session.get(Schedule, schedule_id)
+    if not schedule:
+        print(f"❌ Schedule {schedule_id} not found")
+        return
+    
+    staff_members = Staff.query.filter(Staff.id.in_(staff_id_list)).all()
+    if not staff_members:
+        print("❌ No staff members found")
+        return
+    
+    strategies = {
+        "even": EvenDistributionStrategy,
+        "minimize": MinimizeDaysStrategy,
+        "daynight": BalanceDayNightStrategy
+    }
+    
+    strategy_key = strategy.lower()
+    if strategy_key not in strategies:
+        print(f"❌ Unknown strategy: {strategy}")
+        print("Use: even, minimize, or daynight")
+        return
+
+    chosen_strategy = strategies[strategy_key]()
+    
+    generator = ScheduleGenerator()
+    generator.setStrategy(chosen_strategy)
+    generator.setStaffList(staff_members)
+    new_schedule = generator.generateSchedule(week_start=schedule.weekStart)
+    
+    print(f"✅ Schedule created successfully!")
+    print(f"Strategy: {strategy}")
+    print(f"Staff count: {len(staff_members)}")
+    print(f"Shifts assigned: {len(new_schedule.shifts)}")
+
+
+
+
 app.cli.add_command(schedule_cli)
 '''
 Test Commands
