@@ -1,9 +1,6 @@
 # gunicorn_config.py
-import multiprocessing
-
-# The socket to bind.
-# "0.0.0.0" to bind to all interfaces. 8000 is the port number.
-bind = "0.0.0.0:8080"
+import os
+bind = "0.0.0.0:" + os.environ.get('PORT', '10000')
 
 # The number of worker processes for handling requests.
 workers = 4
