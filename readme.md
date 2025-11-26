@@ -218,6 +218,29 @@ You can run all application tests with the following command
 $ pytest
 ```
 
+Test can be broken down into either unit or integration using
+```bash
+$ pytest -m unit
+or
+$ pytest -m integration
+```
+
+Further test can be broken down into categories by place the following after "-m"
+```bash
+userunit
+adminunit
+staffunit
+scheduleunit
+strategyunit
+
+userintegration
+adminintegration
+staffintegration
+permissionintegration
+autoscheduleintegration
+```
+
+
 ## Test Coverage
 
 You can generate a report on your test coverage via the following command
