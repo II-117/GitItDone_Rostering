@@ -6,6 +6,11 @@ def load_config(app, overrides):
     else:
         app.config.from_object('App.default_config')
     app.config.from_prefixed_env()
+    
+    uri = app.config.get('SQLALCHEMY_DATABASE_URI')
+    if uri and uri.startswith('postgres://'):
+        app.config['SQLALCHEMY_DATABASE_URI'] = uri.replace('postgres://', 'postgresql://', 1)
+    
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['PREFERRED_URL_SCHEME'] = 'https'
